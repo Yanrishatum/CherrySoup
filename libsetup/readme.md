@@ -2,10 +2,12 @@
 Small program for easy management of several haxelib directories.
 
 ## Usage
+`libsetup` - Shows usage and lists all registered libraries.  
 `libsetup <name>` - switch to library.  
 `libsetup -add <name> <path>` - Adds new library to the storage. Path should be absolute.  
 `libsetup -remove <name>` - Removes existing library from the storage.  
-`libsetup -rename <current_name> <new_name>` - Changes existing library name.
+`libsetup -rename <current_name> <new_name>` - Changes existing library name.  
+`libsetup -peek <name> ` - Take a peek at library contents.
 
 ## Manual list modifications
 Libsetup will create `libsetup_list.txt` file placed near the executable. You can manually edit this file, but there are few rules:

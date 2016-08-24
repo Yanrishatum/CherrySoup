@@ -9,9 +9,11 @@ class LibSetup
 
   private static var usage:Map<String, Array<String>> =
   [
+    ""        => ["<name>", "Change current library"],
     "-add"    => ["-add <name> <path>", "Adds new library to the storage. Path should be absolute."],
     "-remove" => ["-remove <name>", "Removes existing library from the storage."],
-    "-rename" => ["-rename <current_name> <new_name>", "Changes existing library name."]
+    "-rename" => ["-rename <current_name> <new_name>", "Changes existing library name."],
+    "-peek"   => ["-peek <name>", "Take a peek of library contents"]
   ];
   
   private static var libs:Map<String, String>;
@@ -45,6 +47,10 @@ class LibSetup
           case "-rename":
             if (args.length < 2) printUsage("-rename");
             else renameLibrary(args.shift(), args.shift());
+            continue;
+          case "-peek":
+            if (args.length < 1) printUsage("-peek");
+            else peekLibrary(args.shift());
             continue;
         }
       }
@@ -125,6 +131,75 @@ class LibSetup
     }
   }
   
+  private static function peekLibrary(name:String):Void
+  {
+    if (!libs.exists(name)) Sys.println("Library with specified name does not exists.");
+    else
+    {
+      var current:String = getActiveLibPath();
+      setActiveLib(name, true);
+      Sys.command("haxelib", ["list"]);
+      setActiveLibPath(current, true);
+      // var path:String = libs.get(name);
+      // var folders:Array<String> = FileSystem.readDirectory(path);
+      // var output:Array<{ name:String, list:Array<String>, active:String, dev:String }> = new Array();
+      // for (lib in libs)
+      // {
+        // var libPath:String = Path.join([path, lib]);
+        // if (!FileSystem.isDirectory(libPath)) continue;
+        // var tmpPath:String = Path.join([libPath, ".current"]);
+        // var active:String = FileSystem.exists(tmpPath) ? File.getContent(tmpPath) : null;
+        
+        // tmpPath = Path.join([libPath, ".dev"]);
+        // var dev:String = FileSystem.exists(tmpPath) ? File.getContent(tmpPath) : null;
+        
+        // if (dev == null && active == null) continue;
+        // var list:Array<String> = new Array();
+        // var subFolder = FileSystem.readDirectory(Path.join(path, lib));
+        // for (version in subFolder)
+        // {
+          // tmpPath = Path.join([libPath, version]);
+          // if (!FileSystem.isDirectory(tmpPath)) continue;
+          
+        // }
+        
+      // }
+    }
+  }
+  
+  private static inline function setActiveLib(name:String, silent:Bool = false):Void
+  {
+    setActiveLibPath(libs[name], silent);
+  }
+  
+  private static function setActiveLibPath(path:String, silent:Bool = false):Void
+  {
+    if (silent)
+    {
+      var proc:Process = new Process("haxelib", ["setup", path]);
+    }
+    else
+    {
+      Sys.command("haxelib", ["setup", path]);
+    }
+  }
+  
+  private static function getActiveLibPath():String
+  {
+    var proc:Process = new Process("haxelib", ["config"]);
+    return Path.normalize(Path.removeTrailingSlashes(proc.stdout.readLine()));
+  }
+  
+  private static function getActiveLib():String
+  {
+    var path:String = getActiveLibPath();
+    for (key in libs)
+    {
+      if (libs[key] == path) return key;
+    }
+    return "Unknown library";
+  }
+  
   //==========================================================
   //}
   //==========================================================
@@ -162,8 +237,7 @@ class LibSetup
   
   private static function printHelp():Void
   {
-    var proc:Process = new Process("haxelib", ["config"]);
-    var currPath:String = Path.normalize(Path.removeTrailingSlashes(proc.stdout.readLine()));
+    var currPath:String = getActiveLibPath();
     
     var charOffset:Int = 0;
     var buf:StringBuf = new StringBuf();
