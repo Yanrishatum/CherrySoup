@@ -1,0 +1,5 @@
+BinaryTmx
+-lib format-tiled
+-lib format
+-main BinaryTmx
+-neko BinaryTmx.n
