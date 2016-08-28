@@ -1,0 +1,6 @@
+SpritesheetToGif
+-lib format
+-lib linc_dialogs
+-main SpritesheetToGif
+-D dce=full
+-neko s2g.n
