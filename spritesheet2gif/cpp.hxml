@@ -3,4 +3,5 @@ SpritesheetToGif
 -lib linc_dialogs
 -main SpritesheetToGif
 -D dce=full
+-lib hxcpp
 -cpp s2g

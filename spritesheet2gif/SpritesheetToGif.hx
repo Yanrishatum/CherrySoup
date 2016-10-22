@@ -17,6 +17,11 @@ import sys.FileSystem;
 import sys.io.File;
 import sys.io.FileInput;
 import sys.io.FileOutput;
+#if (hxcpp && static_std)
+import hxcpp.StaticStd;
+import hxcpp.StaticZlib;
+import hxcpp.StaticRegexp;
+#end
 
 /**
  * ...
