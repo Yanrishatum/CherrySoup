@@ -1,0 +1,4 @@
+HaxeSetup.hx
+-lib format
+-main HaxeSetup
+-neko haxesetup.n
