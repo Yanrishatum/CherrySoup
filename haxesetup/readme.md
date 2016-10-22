@@ -19,8 +19,9 @@ Currently only supports Windows.
 Problems to resolve to add Linux and Mac support:  
 * Set environmental variable `%HAXEPATH%`.
 * For Linux figure out how to detect x64/32 version of OS as they have different Haxe builds.
-### Notes
+### Implementation notes
 * Sets `%HAXEPATH%` environmental variable, so it's essential to restart applications that use haxe to update said variables.
+* Uses `build.haxe.org` as source of builds and does not uses git.
 
 ## Settings
 ### Global settings
