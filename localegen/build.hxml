@@ -1,0 +1,10 @@
+-lib firetongue
+-lib format
+-lib format-tiled
+-lib tjson
+-lib bfont
+-lib unifill
+-D dce=full
+-cp .
+-main LocaleGen
+-neko lg.n

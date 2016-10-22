@@ -11,3 +11,4 @@ Small programs and libraries, that I use, but do not deserve separate repo.
 
 ## Scraps
 [WeeklyPixel](weeklypixel) - Draft Imgur API + PixelJoint->Imgur reposter of WeeklyShowcase.
+[LocaleGen](localegen) - PocketKingdom development utility tool.
