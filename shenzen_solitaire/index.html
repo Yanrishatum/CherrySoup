@@ -1,0 +1,128 @@
+<!--
+  All graphic and sound assets are owned by Zachtronics and used in SHENZHEN I/O.
+  Consider buying their game, it's really good! :D
+  http://store.steampowered.com/app/504210/
+  
+  The source code of this application is released under Public Domain.
+ -->
+<html>
+  <head>
+    <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicons/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="favicons/manifest.json">
+    <link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="favicons/favicon.ico">
+    <meta name="msapplication-config" content="favicons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    
+    <title>SHENZHEN I/O Solitaire</title>
+    
+    <script src="lib/Util.js"></script>
+    <script src="lib/Sfx.js"></script>
+    <script src="lib/Slot.js"></script>
+    <script src="lib/Card.js"></script>
+    <script src="lib/Tweener.js"></script>
+    <script src="lib/ItDoesNotNeedUnfoFunction.js"></script>
+    <script src="lib/Game.js"></script>
+    <link rel="stylesheet" href="solitaire.css" type="text/css"/>
+  </head>
+  <body class="">
+    <!-- W:80x7 -->
+    <!-- NG:1117x812 -->
+    <!-- Instr: 873x812 -->
+    <div class="app-window">
+      <!--<img src="table_large.png" class="table"/>-->
+      
+      <div id="sfxButton" class="app-text-button app-small-button">SFX</div>
+      <div id="musicButton" class="app-text-button app-small-button">MUSIC</div>
+      <div id="instructionsButton" class="app-text-button app-button">INSTRUCTIONS</div>
+      <div id="newGameButton" class="app-text-button app-button">NEW GAME</div>
+      <div class="volume-slider-container">
+        <div class="volume-slider-caption">VOLUME</div>
+        <div id="volumeSlider" class="volume-slider"></div>
+      </div>
+      <div id="container" class="table-container">
+        <div id="buttonWhite" class="button"></div>
+        <div id="buttonGreen" class="button"></div>
+        <div id="buttonRed" class="button"></div>
+      </div>
+      <div id="instructions" class="table-container">
+        <div class="tutorial-text left-top">To win, stack three suits from 1 to 9 in the top-right corner of the table.</div>
+        <div class="tutorial-text right-top">Cards can be stacked and moved in the center of the table,<br>but only if they are of the alternating suits and decreasing values.</div>
+        <div class="tutorial-text left-bottom">The free cells at the top-left corner of the table can store one card of any type.</div>
+        <div class="tutorial-text right-bottom">When all four dragons of a single type are exposed, they can all be permanently<br>moved to an open free cell by pushing the corresponding button.</div>
+      </div>
+    </div>
+    <div id="preloading">
+      <!--<img src="background.png">-->
+      <!--<img src="app_window.png">-->
+      <!--<img src="app_window_smll.png">-->
+      <!--<img src="app_button.png">-->
+      <img src="app_button_disabled.png">
+      <img src="app_button_hover.png">
+      <img src="app_small_button.png">
+      <img src="app_small_button_disabled.png">
+      <img src="app_small_button_disabled_hover.png">
+      <img src="app_small_button_hover.png">
+      <!--<img src="table_large.png">-->
+      <img src="button_green_up.png">
+      <img src="button_green_active.png">
+      <img src="button_green_down.png">
+      <img src="button_red_up.png">
+      <img src="button_red_active.png">
+      <img src="button_red_down.png">
+      <img src="button_white_up.png">
+      <img src="button_white_active.png">
+      <img src="button_white_down.png">
+      <img src="card_back.png">
+      <img src="card_back_upgrade.png">
+      <img src="card_front.png">
+      <!--<img src="card_shadow.png">-->
+      <!--<img src="card_texture.png">-->
+      <img src="stack_side_fix.png">
+      <img src="table_large.png">
+      <img src="table_small.png">
+      <img src="tutorial_large.png">
+      <img src="tutorial_small.png">
+      <img src="small_icons/bamboo.png">
+      <img src="small_icons/characters.png">
+      <img src="small_icons/coins.png">
+      <img src="small_icons/dragon_green.png">
+      <img src="small_icons/dragon_red.png">
+      <img src="small_icons/dragon_white.png">
+      <img src="small_icons/flower.png">
+      <img src="large_icons/bamboo_1.png">
+      <img src="large_icons/bamboo_2.png">
+      <img src="large_icons/bamboo_3.png">
+      <img src="large_icons/bamboo_4.png">
+      <img src="large_icons/bamboo_5.png">
+      <img src="large_icons/bamboo_6.png">
+      <img src="large_icons/bamboo_7.png">
+      <img src="large_icons/bamboo_8.png">
+      <img src="large_icons/bamboo_9.png">
+      <img src="large_icons/char_1.png">
+      <img src="large_icons/char_2.png">
+      <img src="large_icons/char_3.png">
+      <img src="large_icons/char_4.png">
+      <img src="large_icons/char_5.png">
+      <img src="large_icons/char_6.png">
+      <img src="large_icons/char_7.png">
+      <img src="large_icons/char_8.png">
+      <img src="large_icons/char_9.png">
+      <img src="large_icons/coins_1.png">
+      <img src="large_icons/coins_2.png">
+      <img src="large_icons/coins_3.png">
+      <img src="large_icons/coins_4.png">
+      <img src="large_icons/coins_5.png">
+      <img src="large_icons/coins_6.png">
+      <img src="large_icons/coins_7.png">
+      <img src="large_icons/coins_8.png">
+      <img src="large_icons/coins_9.png">
+      <img src="large_icons/dragon_green.png">
+      <img src="large_icons/dragon_red.png">
+      <img src="large_icons/dragon_white.png">
+      <img src="large_icons/flower.png">
+    </div>
+  </body>
+</html>

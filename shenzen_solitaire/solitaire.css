@@ -1,0 +1,460 @@
+body
+{
+  margin: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  overflow-x: hidden;
+  background-image: url('background.png');
+  background-size: cover;
+}
+
+/** Buttons! **/
+#buttonWhite
+{
+  background-image: url('button_white_up.png');
+  left: 497px;
+  top: 17.5px;
+}
+#buttonWhite.enabled
+{
+  background-image: url('button_white_active.png');
+}
+#buttonWhite.enabled:active,#buttonWhite.disabled
+{
+  background-image: url('button_white_down.png');
+}
+
+#buttonGreen
+{
+  background-image: url('button_green_up.png');
+  left: 497px;
+  top: 101px;
+}
+#buttonGreen.enabled
+{
+  background-image: url('button_green_active.png');
+}
+#buttonGreen.enabled:active,#buttonGreen.disabled
+{
+  background-image: url('button_green_down.png');
+}
+
+#buttonRed
+{
+  background-image: url('button_red_up.png');
+  left: 497px;
+  top: 183px;
+}
+#buttonRed.enabled
+{
+  background-image: url('button_red_active.png');
+}
+#buttonRed.enabled:active,#buttonRed.disabled
+{
+  background-image: url('button_red_down.png');
+}
+
+.button
+{
+  position: absolute;
+  width: 72px;
+  height: 71px;
+}
+
+.button:not(.enabled)
+{
+  cursor: auto;
+  cursor: url('cursor_running.png') 39 39, auto;
+}
+
+.button.enabled
+{
+  cursor: pointer;
+  cursor: url('cursor_hand_open.png') 39 39, pointer;
+}
+
+/** Card stack */
+.card-stack
+{
+  position: absolute;
+  top: 178px;
+  background-image: url('stack_side_fix.png');
+  width: 121px;
+  height: 60px;
+}
+
+/** Cards! */
+
+.card, .card .face, .card .back
+{
+  width: 122px;
+  height: 237px;
+  position: absolute;
+}
+
+.card .face
+{
+  background-image: url('card_front.png');
+  position: absolute;
+}
+
+.card .back
+{
+  background-image: url('card_back.png');
+  position: absolute;
+}
+
+.dragon-mode .card .back
+{
+  background-image: url('card_back_upgrade.png');
+}
+
+.card.dragable
+{
+  cursor: pointer;
+  cursor: url('cursor_hand_open.png') 39 39, pointer;
+}
+
+.card.dragable.dragged
+{
+  cursor: pointer;
+  cursor: url('cursor_hand_closed.png') 39 39, pointer;
+}
+
+.card .card-icon
+{
+  position: absolute;
+}
+
+.card .card-icon.large
+{
+  left: 24.5px;
+  top: 67.5px;
+}
+
+.card .card-icon.digit
+{
+  font-family: "Glacial";
+  font-weight: bold;
+  font-size: 21px;
+  text-align: center;
+  width: 15px;
+  cursor: default;
+  cursor: url('cursor_normal.png') 39 39, default;
+}
+
+.card .card-icon.digit.small-top
+{
+  left: 10px;
+  top: 6px;
+}
+
+.card .card-icon.digit.small-bottom
+{
+  right: 10px;
+  bottom: 7px;
+}
+
+.card .card-icon.small-top.full
+{
+  left: 7px;
+  top: 8px;
+}
+
+.card .card-icon.small-top.part
+{
+  left: 10px;
+  top: 28px;
+}
+
+.card .card-icon.small-bottom
+{
+  transform: scale(-1, -1);
+}
+
+.card .card-icon.small-bottom.full
+{
+  right: 10px;
+  bottom: 8px;
+}
+
+.card .card-icon.small-bottom.part
+{
+  right: 10px;
+  bottom: 30px;
+}
+
+@font-face
+{
+  font-family: "Glacial";
+  src: url('glacial-indifference.bold.otf');
+  font-weight: bold;
+}
+
+/* Application window outline */
+
+.table, .table-container
+{
+  top: 6px;
+  position: absolute;
+  left: 80px;
+}
+
+.table-container
+{
+  background-image: url('table_large.png');
+  overflow: hidden;
+  width: 1279px;
+  height: 805px;
+}
+
+/*.table
+{
+  max-height: 805px;
+  max-width: 1279px;
+}*/
+
+@media (max-width: 1379px)
+{
+  .app-window
+  {
+    left: -80px;
+  }
+}
+
+@media (min-width: 1379px)
+{
+  .app-window
+  {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.app-window
+{
+  background-image: url('app_window.png');
+  width: 1379px;
+  height: 886px;
+  position: relative;
+}
+
+#instructionsButton
+{
+  left: 873px;
+  /*top: 812px;*/
+  bottom: 29px;
+}
+
+#newGameButton
+{
+  left: 1117px;
+  /*top: 812px;*/
+  bottom: 29px;
+}
+
+.app-text-button
+{
+  position: absolute;
+  padding-top: 16px;
+  height: 29px;
+  font-family: "Sinkin Sans";
+  font-size: 12px;
+  text-align: center;
+  color: #ddd;
+  vertical-align: middle;
+}
+
+.app-button
+{
+  background-image: url('app_button.png');
+  width: 244px;
+}
+
+.app-button:hover
+{
+  background-image: url('app_button_hover.png');
+}
+
+.app-button.disabled
+{
+  cursor: auto;
+  cursor: url('cursor_running.png') 39 39, auto;
+  background-image: url('app_button_disabled.png') !important;
+}
+.app-text-button:not(.disabled),.volume-slider
+{
+  cursor: pointer;
+  cursor: url('cursor_point.png') 39 39, pointer;
+}
+
+.app-small-button
+{
+  background-image: url('app_small_button.png');
+  width: 76px;
+}
+.app-small-button:hover
+{
+  background-image: url('app_small_button_hover.png');
+}
+.app-small-button.off
+{
+  background-image: url('app_small_button_disabled.png');
+}
+.app-small-button.off:hover
+{
+  background-image: url('app_small_button_disabled_hover.png');
+}
+
+#sfxButton
+{
+  left: 78px;
+  bottom: 29px;
+}
+
+#musicButton
+{
+  left: 154px;
+  bottom: 29px;
+}
+
+.volume-slider-container
+{
+  font-family: "Sinkin Sans";
+  font-size: 12px;
+  text-align: center;
+  color: #374049;
+  position: absolute;
+  left: 250px;
+  bottom: 31px;
+  height: 36px;
+  width: 142px;
+}
+
+.volume-slider-caption
+{
+  position: relative;
+  top: 7px;
+}
+
+.volume-slider
+{
+  position: absolute;
+  background-image: url('playback_slider_sandbox.png');
+  width: 39px;
+  height: 36px;
+  top: 0px;
+}
+
+@font-face
+{
+  font-family: "Sinkin Sans";
+  src: url('SinkinSans-300Light.otf');
+}
+
+/* Instructions */
+
+#instructions
+{
+  background-image: url('tutorial_large.png');
+  z-index: 2000;
+}
+#instructions:not(.shown)
+{
+  display: none;
+}
+
+.tutorial-text
+{
+  position: absolute;
+  font-family: "Sinkin Sans";
+  font-size: 12px;
+  text-align: center;
+  cursor: default;
+  cursor: url('cursor_normal.png') 39 39, default;
+  color: #92a7a5;
+}
+
+.tutorial-text.left-top
+{
+  top: 345px;
+  left: 12px;
+  width: 620px;
+}
+
+.tutorial-text.right-top
+{
+  right: 38px;
+  top: 325px;
+}
+
+.tutorial-text.left-bottom
+{
+  width: 620px;
+  bottom: 48px;
+  left: 12px;
+}
+
+.tutorial-text.right-bottom
+{
+  width: 620px;
+  right: 20px;
+  bottom: 57px;
+}
+
+
+#preloading
+{
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+body:not(.loaded) #instructions
+{
+  opacity: 0;
+  display: initial;
+}
+
+/** Smaller screen */
+
+@media (max-height: 858px)
+{
+  .app-window
+  {
+    background-image: url('app_window_small.png');
+    height: 787px;
+  }
+  
+  .table-container
+  {
+    background-image: url('table_small.png');
+    height: 704px;
+    top: 7px;
+  }
+  
+  #instructions
+  {
+    background-image: url('tutorial_small.png');
+  }
+  
+  #buttonWhite
+  {
+    top: 16.5px;
+  }
+  
+}
+
+body
+{
+  cursor: url('cursor_normal.png') 39 39, auto;
+}
+
+/*body
+{
+  cursor: url('cursor_normal.png') 39 39, auto;
+  cursor: url('cursor_normal.png') 39 39, default;
+  cursor: url('cursor_hand_open.png') 39 39, pointer;
+  cursor: url('cursor_hand_closed.png') 39 39, move;
+}*/
