@@ -192,7 +192,9 @@ class HaxeSetup
     {
       if (version.git == query || version.alias == query)
       {
-        var path:String = Path.join([settings.toolkitListPath, version.git, version.path]);
+        var path:String;
+        if (version.branch == "external") path = version.path;
+        else path = Path.join([settings.toolkitListPath, version.git, version.path]);
         if (windows())
         {
           Sys.command("setx", ["HAXEPATH", StringTools.replace(Path.addTrailingSlash(path), "/", "\\"), "/m"]);
