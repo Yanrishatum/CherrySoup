@@ -16,7 +16,7 @@ class Album
     if (layout != null) pars.set("layout", layout);
     if (ids != null) pars.set("ids", ids);
     if (cover != null) pars.set("cover", cover);
-    var resp:Basic = ImgurUtils.getApi("album", true, pars);
+    var resp:Basic = ImgurUtils.getApi("album", "POST", pars);
     if (resp.success) return resp.data;
     else return null;
   }

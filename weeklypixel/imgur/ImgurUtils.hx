@@ -1,4 +1,5 @@
 package imgur;
+import haxe.io.BytesOutput;
 import haxe.Http;
 import imgur.Imgur;
 import imgur.ImgurTypes;
@@ -16,6 +17,8 @@ class ImgurUtils
   public static var tokenType:String;
   public static var userName:String;
   public static var userId:Int = 0;
+  
+  public static var debug:Bool = false;
   
   public static function toJson():Dynamic
   {
@@ -46,16 +49,52 @@ class ImgurUtils
     if (Reflect.hasField(data, "userName")) userName = data.userName;
   }
   
+  public static inline function setParam<T>(params:Map<String, Dynamic>, name:String, v:T):Void
+  {
+    if (v != null) params.set(name, v);
+  }
+  
+  public static inline function setBool(params:Map<String, Dynamic>, name:String, b:Bool, asVal:String):Void
+  {
+    if (b) params.set(name, asVal);
+  }
+  
+  public static inline function getApiFromBasic<T>(api:String, method:String = "GET", ?params:Map<String, Dynamic>):T
+  {
+    var basic:Basic = getApi(api, method, params);
+    if (basic.success) return basic.data;
+    else return null;
+  }
+  
   public static inline function checkUserToken():Void
   {
     if (userToken == null) throw "This API requires user access token!";
   }
   
-  public static function getApi(api:String, post:Bool = false, ?params:Map<String, Dynamic>):Basic
+  private static inline function statusHandler(status:Int):Void
+  {
+    trace("Response status: " + status);
+  }
+  
+  private static inline function errorHandler(e:String):Void
+  {
+    trace("Response error: " + e);
+  }
+  
+  public static function getApi(api:String, method:String = "GET", ?params:Map<String, Dynamic>):Basic
   {
     if (appId == null) throw "[Imgur] Application ID not set!";
     
     var http:Http = new Http("https://api.imgur.com/3/" + api);
+    
+    if (debug)
+    {
+      trace("Http: https://api.imgur.com/3/" + api);
+      trace("Method: " + method);
+      http.onStatus = statusHandler;
+      http.onError = errorHandler;
+    }
+    
     if (params != null)
     {
       for (key in params.keys())
@@ -65,19 +104,34 @@ class ImgurUtils
         {
           var arr:Array<Dynamic> = cast item;
           for (entry in arr) http.addParameter(key + "[]", Std.string(entry));
+          if (debug) trace('Added array: $key => [${arr.join(", ")}]');
         }
         else
         {
           http.addParameter(key, Std.string(item));
+          if (debug) trace('Added parameter: $key => $item');
         }
       }
     }
     if (userToken != null) http.addHeader("Authorization", "Bearer " + userToken);
     else http.addHeader("Authorization", "Client-ID " + appId);
-    http.request(post);
+    if (debug)
+    {
+      if (userToken != null) trace("Authorized request: " + userToken);
+      else trace("Anonymous request");
+    }
+    // http.request(post);
+    var data:BytesOutput = new BytesOutput();
+    http.customRequest(method == "POST", data, null, method);
+    #if neko
+    var str:String = neko.Lib.stringReference(data.getBytes());
+    #else
+    var str:String = data.getBytes().toString();
+    #end
+    if (debug) trace("Data response length: " + str.length);
     try
     {
-      var json:Basic = haxe.Json.parse(http.responseData);
+      var json:Basic = haxe.Json.parse(str);
       Imgur.errorStatus = json.status;
       if (!json.success) Imgur.error = json.data;
       else Imgur.error = null;
@@ -85,9 +139,13 @@ class ImgurUtils
     }
     catch(e:Dynamic)
     {
-      trace(e);
-      trace(http.responseData);
+      trace("Json parsing error: " + e);
+      trace("Data: " + str);
+      #if neko
       neko.Lib.rethrow(e);
+      #else
+      throw e;
+      #end
       return null;
     }
   }

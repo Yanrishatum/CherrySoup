@@ -1,18 +1,33 @@
 package;
+import sys.io.File;
+import sys.FileSystem;
+import imgur.ImgurUtils;
 import haxe.Http;
 import imgur.Imgur;
-import imgur.ImgurUtils;
 import imgur.ImgurTypes;
 import haxe.io.Path;
+#if cpp
+
+#end
 
 class WeeklyPixel
 {
   
   private static inline var NEW_ICONS_URL:String = "http://pixeljoint.com/pixels/new_icons.asp";
   private static inline var WEEKLY_OB:String = "showcase";
+  private static var settings:IniFile;
+  private static var months:Array<String> = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   
   public static function main()
   {
+    Sys.println("Running at: " + Sys.getCwd());
+    if (FileSystem.exists("wp.ini")) settings = IniFile.load(File.getContent("wp.ini"));
+    else
+    {
+      settings = IniFile.load("[settings]\nHeaderID=KKM3Sp2\n[history]");
+    }
+    if (settings["settings"].asBool("debug", false)) ImgurUtils.debug = true;
+    
     if (sys.FileSystem.exists("imgur.json"))
     {
       ImgurUtils.fromJson(haxe.Json.parse(sys.io.File.getContent("imgur.json")));
@@ -26,13 +41,16 @@ class WeeklyPixel
     }
     Imgur.oAuth2.renewToken();
     sys.io.File.saveContent("imgur.json", haxe.Json.stringify(ImgurUtils.toJson()));
-    
     Sys.println("Imgur authorized");
     
     // trace(Imgur.image.uploadURL("http://pixeljoint.com/files/icons/full/crystalcavern.png", null, 
       // "crystalcavern.png", "Green Shine", "by Snake"));
     // trace(Imgur.image.get("G1LXrHD"));
+    
     update();
+    // trace(Imgur.album.create("test", null, null, null, ["6g5Np5a", "2XqVeJv", "iPAS4DJ", "pbUDqWw"], "pbUDqWw"));
+    
+    // File.saveContent("wp.ini", settings.toString());
     
   }
   
@@ -44,21 +62,75 @@ class WeeklyPixel
     Sys.println("Got image list, loading...");
     var ids:Array<String> = new Array();
     list[0].getFullPiece();
+    var imgid:Int = 1;
     for (art in list)
     {
       Sys.println("Loading: " + art.name + " by " + art.author);
       art.getFullPiece();
       Sys.print("Uploading... ");
-      var desc:String = "by " + art.author + "\r\nPiece URL: " + art.pieceURL + "\r\nAuthor URL: " + art.authorURL;
-      var img:ImageType = Imgur.image.uploadURL(art.fullURL, null, Path.withoutDirectory(art.fullURL), art.name, desc);
+      var desc:String = art.name + " by " + art.author + "\r\nPiece URL: " + art.pieceURL + "\r\nAuthor URL: " + art.authorURL + "\r\nRating place: " + imgid;
+      imgid++;
+      if (art == list[list.length - 1]) desc += getHistoryString();
+      var img:ImageType = Imgur.image.uploadURL(art.fullURL, null, Path.withoutDirectory(art.fullURL), null, desc);
       Sys.println("Done: " + img.id);
       ids.push(img.id);
     }
+    
     ids.reverse();
+    ids.push(settings["settings"]["HeaderID"]);
     Sys.print("Uploaded all images, creating an album... ");
-    var res:NewAlbumType = Imgur.album.create("Weekly Pixel - weekly digest of PixelJoint", "Weekly Pixel - teh bot of top-24 pixel art images on PixelJoint because Author wanted to make one.", null, null, ids, ids[ids.length - 1]);
+    var title:String = "Weekly Pixel: Week " + getWeek();
+    var res:NewAlbumType = Imgur.album.create(title, null, null, null, ids, ids[ids.length - 1]);
     Sys.println("Done: " + res.id);
+    var week:String = getWeek();
+    settings["history"][week] = res.id;
+    var date:Date = Date.now();
+    settings["history"][week + "_date"] = date.getDate() + ' ' + months[date.getMonth()] + " '" + Std.string(date.getFullYear()).substr(2);
+    File.saveContent("wp.ini", settings.toString());
+    
+    if (settings["settings"].asBool("AutoShare", false))
+    {
+      Sys.print("Sharing album... ");
+      Imgur.gallery.shareAlbum(res.id, title, "Creativity", true, false);
+      Sys.println("Done");
+    }
     // trace(res);
+  }
+  
+  private static inline function imgurErrorCheck():Void
+  {
+    if (Imgur.error != null)
+    {
+      Sys.println("Error occured with Imgur communication:");
+      Sys.println("Status: " + Imgur.errorStatus);
+      Sys.println("Error: " + Imgur.error.error);
+      Sys.println("Method: " + Imgur.error.method);
+      Sys.println("Request: " + Imgur.error.request);
+    }
+  }
+  
+  private static function getWeek():String
+  {
+    return Std.string(Std.int(Lambda.count(settings["history"]) / 2 + 1));
+  }
+  
+  private static function getHistoryString():String
+  {
+    var buf:StringBuf = new StringBuf();
+    
+    buf.add("\r\n\r\nPrevious weeks:");
+    var count:Int = Std.int(Lambda.count(settings["history"]) / 2);
+    for (i in 0...count)
+    {
+      buf.add("\r\nWeek ");
+      buf.add(i + 1);
+      buf.add(' @ ');
+      buf.add(settings["history"][Std.string(i) + "_date"]);
+      buf.add(": https://imgur.com/gallery/");
+      buf.add(settings["history"][Std.string(i)]);
+    }
+    buf.add("\r\nThanks to Finlal for logo.\r\n* Those posts always marked as mature, because bot do not guarantee lack of nudity in weekly top.");
+    return buf.toString();
   }
   
   private static function getIcons(type:String, page:Int, ?into:Array<ArtEntry>):Array<ArtEntry>
@@ -81,54 +153,4 @@ class WeeklyPixel
     
     return entries;
   }
-}
-
-class ArtEntry
-{
-  // Who don't like regular expressions?
-  private static var imageAndName:EReg = ~/<a href='(\/pixelart\/[0-9]+\.htm)'>([^<]+)<\/a>/;
-  private static var authorReg:EReg = ~/<a href='(\/p\/[0-9]+\.htm)'[^>]+>([^<]+)<\/a>/;
-  private static var dateReg:EReg = ~/Added to gallery @ (\d+)\/(\d+)\/(\d+) (\d+):(\d+)/;
-  private static var mainPieceReg:EReg = ~/<img id='mainimg' src="([^"]+)"/;
-  
-  public static function createFromHTML(data:String):ArtEntry
-  {
-    var entry:ArtEntry = new ArtEntry();
-    
-    imageAndName.match(data);
-    entry.pieceURL = "http://pixeljoint.com" + imageAndName.matched(1);
-    entry.name = imageAndName.matched(2);
-    
-    authorReg.match(data);
-    entry.authorURL = "http://pixeljoint.com" + authorReg.matched(1);
-    entry.author = authorReg.matched(2);
-    
-    dateReg.match(data);
-    entry.date = new Date(Std.parseInt(dateReg.matched(3)), Std.parseInt(dateReg.matched(1)), Std.parseInt(dateReg.matched(2)),
-      Std.parseInt(dateReg.matched(4)), Std.parseInt(dateReg.matched(5)), 0);
-    
-    return entry;
-  }
-  
-  public var pieceURL:String;
-  public var authorURL:String;
-  public var name:String;
-  public var author:String;
-  public var date:Date;
-  public var fullURL:String;
-  
-  public function getFullPiece()
-  {
-    var http:Http = new Http(pieceURL);
-    http.request(false);
-    mainPieceReg.match(http.responseData);
-    fullURL = "http://pixeljoint.com" + mainPieceReg.matched(1);
-  }
-  
-  public function new()
-  {
-    
-  }
-  
-  
 }

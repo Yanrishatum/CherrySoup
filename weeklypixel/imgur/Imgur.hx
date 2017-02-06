@@ -17,6 +17,8 @@ class Imgur
   
   public static var image:Image = new Image();
   
+  public static var gallery:Gallery = new Gallery();
+  
   public static var oAuth2:OAuth2 = new OAuth2();
   
 }

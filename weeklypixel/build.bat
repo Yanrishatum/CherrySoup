@@ -1,2 +1,2 @@
 haxe build.hxml
-neko wp.n -test
+hl wp.hl -test
