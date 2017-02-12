@@ -13,7 +13,7 @@ class ImgurUtils
   public static var userPIN:String;
   public static var userToken:String;
   public static var refreshToken:String;
-  public static var tokenExpires:Int = 0;
+  public static var tokenExpires:Float = 0;
   public static var tokenType:String;
   public static var userName:String;
   public static var userId:Int = 0;
