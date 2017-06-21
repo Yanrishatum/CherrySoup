@@ -725,7 +725,12 @@ function onCanvasMouseMove(e)
 /** @param {MouseEvent} e */
 function onCanvasMouseUp(e)
 {
-  cameraDrag = false;
+  if (cameraDrag)
+  {
+    saveBackup();
+    cameraDrag = false;
+    return;
+  }
   
   var pos = relMousePos(canvas, e);
   if (currentLink !== null)
@@ -813,6 +818,9 @@ function onCanvasMouseWheel(e)
       if (cameraScale > 0.3)
       {
         cameraScale -= 0.1;
+        cameraX -= canvas.width * .05;
+        cameraY -= canvas.height * .05;
+        saveBackup();
         render();
       }
     }
@@ -821,6 +829,9 @@ function onCanvasMouseWheel(e)
       if (cameraScale < 1)
       {
         cameraScale += 0.1;
+        cameraX += canvas.width * .05;
+        cameraY += canvas.height * .05;
+        saveBackup();
         render();
       }
     }
@@ -941,6 +952,13 @@ function importData(backup)
   var i;
   nodes = [];
   links = [];
+  if (backup.camera)
+  {
+    cameraX = backup.camera.x;
+    cameraY = backup.camera.y;
+    cameraScale = backup.camera.scale;
+  }
+  
   for (i = 0; i < backup.nodes.length; i++)
   {
     var backupNode = backup.nodes[i];
@@ -992,7 +1010,8 @@ function exportData()
 {
   var backup = {
     nodes: [],
-    links: []
+    links: [],
+    camera: { x:cameraX, y:cameraY, scale:cameraScale }
   }
   for (var node of nodes)
   {
