@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Finite State Machine Designer</title>
+    <meta charset="utf-8">
+    <script src="fsm.js"></script>
+    
+    <style>
+      body
+      {
+        margin: 0;
+      }
+      
+      .container
+      {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .controls
+      {
+        padding-left: 4px;
+        padding-right: 4px;
+        border-bottom: 1px solid gray;
+      }
+      
+    </style>
+    
+  </head>
+  <body>
+    <div class="container">
+      <div class="controls">
+        Finite State Machine Designer | Based upon <a href="http://madebyevan.com/fsm/">Evan Wallace</a> implementation | 
+        <button onclick="exportJson()">Save as .json</button>
+        <input type="file" onchange="importJson(this.files)">Import .json</input>
+      </div>
+      <canvas id="mainCanvas" style="width:100%; height:100%;"></canvas>
+    </div>
+  </body>
+</html>

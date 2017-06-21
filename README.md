@@ -5,6 +5,7 @@ Small programs and libraries, that I use, but do not deserve separate repo.
 [LibSetup](libsetup) - Haxelib directories manager.  
 [HaxeSetup](haxesetup) - Haxe versions manager.  
 [Spritesheet2Gif](spritesheet2gif) - PNG Spritesheet to animated GIF converter.  
+[FSM](fsm) - Finite State Machine Designer.
 
 ## Libs
 [TMB](tmb) - Tiled `.tmx` converter to binary analogue - `.tmb`. Based on my `format-tiled` library.  
