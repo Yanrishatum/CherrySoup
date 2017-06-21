@@ -428,6 +428,11 @@ var drag = null;
 var shift = false;
 var control = false;
 
+var cameraX = 0;
+var cameraY = 0;
+var cameraScale = 1;
+var cameraDrag = false;
+
 var drawCaret = true;
 var caretId;
 function resetCaretTimer()
@@ -447,6 +452,9 @@ function render()
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.save();
   ctx.translate(0.5, 0.5);
+  
+  ctx.translate(-cameraX, -cameraY);
+  ctx.scale(cameraScale, cameraScale);
   
   for (var node of nodes)
   {
@@ -595,8 +603,8 @@ var relMousePosObj = { x:0, y:0 };
 function relMousePos(obj, e)
 {
   var rect = obj.getBoundingClientRect();
-  relMousePosObj.x = e.clientX - rect.left;
-  relMousePosObj.y = e.clientY - rect.top;
+  relMousePosObj.x = (e.clientX - rect.left + cameraX) / cameraScale;
+  relMousePosObj.y = (e.clientY - rect.top + cameraY) / cameraScale;
   return relMousePosObj;
 }
 
@@ -616,6 +624,12 @@ function copyPos(pos, base)
 /** @param {MouseEvent} e */
 function onCanvasMouseDown(e)
 {
+  if (e.button == 1)
+  {
+    cameraDrag = true;
+    return;
+  }
+  
   var pos = relMousePos(canvas, e);
   selectedObject = selectObject(pos.x, pos.y);
   pressPoint.x = pos.x;
@@ -646,6 +660,14 @@ function onCanvasMouseDown(e)
 /** @param {MouseEvent} e */
 function onCanvasMouseMove(e)
 {
+  if (cameraDrag)
+  {
+    cameraX -= e.movementX;
+    cameraY -= e.movementY;
+    render();
+    return;
+  }
+  
   var pos = relMousePos(canvas, e);
   
   if (currentLink !== null)
@@ -703,6 +725,8 @@ function onCanvasMouseMove(e)
 /** @param {MouseEvent} e */
 function onCanvasMouseUp(e)
 {
+  cameraDrag = false;
+  
   var pos = relMousePos(canvas, e);
   if (currentLink !== null)
   {
@@ -781,6 +805,26 @@ function onCanvasMouseWheel(e)
       saveBackup();
       e.preventDefault();
     }
+  }
+  else if (control)
+  {
+    if (e.deltaY < 0)
+    {
+      if (cameraScale > 0.3)
+      {
+        cameraScale -= 0.1;
+        render();
+      }
+    }
+    else
+    {
+      if (cameraScale < 1)
+      {
+        cameraScale += 0.1;
+        render();
+      }
+    }
+    e.preventDefault();
   }
 }
 
@@ -864,6 +908,13 @@ function onCanvasKeyUp(e)
   if (prevent) e.preventDefault();
 }
 
+function onWindowResize(e)
+{
+  canvas.width = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
+  render();
+}
+
 // Save/load
 
 function restoreBackup()
@@ -884,7 +935,6 @@ function saveBackup()
 {
   localStorage.setItem("fsm", JSON.stringify(exportData()));
 }
-
 
 function importData(backup)
 {
@@ -1046,6 +1096,7 @@ function init()
   document.body.addEventListener("keydown", onCanvasKeyDown);
   document.body.addEventListener("keypress", onCanvasKeyPress);
   document.body.addEventListener("mousewheel", onCanvasMouseWheel);
+  window.addEventListener("resize", onWindowResize);
   ctx = canvas.getContext("2d");
   restoreBackup();
   console.log("init");

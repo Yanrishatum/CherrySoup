@@ -9,3 +9,5 @@ Controls:
 * **Set parent state**: <kbd>Control</kbd> + drag from parent to child. Repeat to remove parent state.
 * **Change style**: Double-click on link/node.
 * **Change node size**: <kbd>Shift</kbd> + mouse wheel
+* **Move viewport**: Middle mouse
+* **Camera zoom**: <kbd>Control</kdb> + mouse wheel
