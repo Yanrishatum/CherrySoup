@@ -25,6 +25,22 @@ class OAuth2
     return pin;
   }
   
+  private inline function attachDebug(http:Http):Void
+  {
+    
+    if (ImgurUtils.debug)
+    {
+      http.onError = function(err:String):Void
+      {
+        Sys.println("OAuth error occured: " + err);
+      }
+      http.onStatus = function(status:Int):Void
+      {
+        Sys.println("OAuth status: " + status);
+      }
+    }
+  }
+  
   public function renewToken():String
   {
     if (ImgurUtils.refreshToken == null)
@@ -33,20 +49,25 @@ class OAuth2
     }
     else
     {
-      if (ImgurUtils.tokenExpires > Date.now().getTime())
+      if (ImgurUtils.debug)
+        Sys.println("[Imgur OAuth2] Getting new refresh-token...\n  Expiration expected at: " + Date.fromTime(ImgurUtils.tokenExpires).toString() + "\n  Current date: " + Date.now().toString());
+      if (ImgurUtils.tokenExpires <= Date.now().getTime())
       {
-        if (ImgurUtils.appId == null) throw "[Imgur OAuth] Application ID not set!";
-        if (ImgurUtils.appSecret == null) throw "[Imgur OAuth] Application Secret not set!";
-        if (ImgurUtils.refreshToken == null) throw "[Imgur OAuth] You don't have a refresh token!";
+        if (ImgurUtils.debug) Sys.println("[Imgur OAuth2] Token expired! Requesting new one");
+        if (ImgurUtils.appId == null) throw "[Imgur OAuth2] Application ID not set!";
+        if (ImgurUtils.appSecret == null) throw "[Imgur OAuth2] Application Secret not set!";
+        if (ImgurUtils.refreshToken == null) throw "[Imgur OAuth2] You don't have a refresh token!";
         
         var http:Http = new Http("https://api.imgur.com/oauth2/token");
+        attachDebug(http);
+        
         http.addParameter("client_id", ImgurUtils.appId);
         http.addParameter("client_secret", ImgurUtils.appSecret);
         http.addParameter("grant_type", "refresh_token");
         http.addParameter("refresh_token", ImgurUtils.refreshToken);
         http.addHeader("Authorization", "Client-ID " + ImgurUtils.appId);
         http.request(true);
-        
+        if (ImgurUtils.debug) Sys.println("[Imgur OAuth2] Renew token data: " + http.responseData);
         var response:Dynamic = haxe.Json.parse(http.responseData);
         ImgurUtils.tokenExpires = Date.now().getTime() + response.expires_in;
         ImgurUtils.tokenType = response.tokenType;
@@ -61,11 +82,14 @@ class OAuth2
   
   public function getToken():String
   {
-    if (ImgurUtils.appId == null) throw "[Imgur OAuth] Application ID not set!";
-    if (ImgurUtils.appSecret == null) throw "[Imgur OAuth] Application Secret not set!";
+    if (ImgurUtils.debug) Sys.println("[Imgur OAuth2] Requesting APP token...");
+    if (ImgurUtils.appId == null) throw "[Imgur OAuth2] Application ID not set!";
+    if (ImgurUtils.appSecret == null) throw "[Imgur OAuth2] Application Secret not set!";
     if (ImgurUtils.userPIN == null) throw "[Imgur OAuth2] You didn't aquired user PIN for application!";
     
     var http:Http = new Http("https://api.imgur.com/oauth2/token");
+    attachDebug(http);
+    
     http.addParameter("client_id", ImgurUtils.appId);
     http.addParameter("client_secret", ImgurUtils.appSecret);
     http.addParameter("grant_type", "pin");
@@ -73,6 +97,7 @@ class OAuth2
     ImgurUtils.userPIN = null;
     http.addHeader("Authorization", "Client-ID " + ImgurUtils.appId);
     http.request(true);
+    if (ImgurUtils.debug) Sys.println("[Imgur OAuth2] Response data: " + http.responseData);
     
     var response:Dynamic = haxe.Json.parse(http.responseData);
     ImgurUtils.tokenExpires = Date.now().getTime() + response.expires_in;
