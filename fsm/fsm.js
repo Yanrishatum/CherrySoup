@@ -808,7 +808,7 @@ function onCanvasMouseWheel(e)
   }
   else if (control)
   {
-    if (e.deltaY < 0)
+    if (e.deltaY > 0)
     {
       if (cameraScale > 0.3)
       {
