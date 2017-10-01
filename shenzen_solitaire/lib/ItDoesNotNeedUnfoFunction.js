@@ -73,7 +73,7 @@ function log(card)
 function undo()
 {
   if (!undoEnabled || undoLog.length === 0) return;
-  alert("She says she doesn't think it need undo, because it is actually quite easy once you develop some skill.");
+  if (victories < 50) alert("She says she doesn't think it need undo, because it is actually quite easy once you develop some skill.");
   var action;
   ignoreLogger = true;
   do
