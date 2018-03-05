@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title></title>
+  <!-- stylesheets -->
+  <link rel="stylesheet" href="treant/Treant.css" type="text/css"/>
+  <link rel="stylesheet" href="style.css" type="text/css"/>
+  
+  <script src="treant/vendor/raphael.js"></script>
+  <script src="treant/Treant.js"></script>
+  <script src="jquery-3.2.1.min.js"></script>
+  
+  <script src="Tree.js"></script>
+  <script src="Branch.js"></script>
+  <script src="Main.js"></script>
+</head>
+<body>
+  <template id="node_template">
+    <div class="node">
+      <div id="collapse"><span>Fold</span></div>
+      <label id="label_checkbox">
+        <input id="checkbox" type="checkbox">
+        <span id="label"></span>
+        <input id="label_edit" type="text">
+      </label>
+      <button id="delete">X</button>
+      <button id="add">Add</button>
+    </div>
+  </template>
+  <script>
+    //var b = new Branch();
+    //document.body.appendChild(b.node);
+    /*
+    var templ =document.getElementById("node_template");
+    var node = document.importNode(templ.content, true).firstElementChild;
+    node.querySelector("#label").textContent = "test";
+    node.querySelector("#collapse").addEventListener("click", toggleCollapse);
+    document.body.appendChild(node);
+    
+    function toggleCollapse()
+    {
+      if (node.classList.contains("collapsed")) node.classList.remove("collapsed");
+      else node.classList.add("collapsed");
+    }
+    
+    function toggleEdit()
+    {
+      if (node.classList.contains("edit"))
+      {
+        node.querySelector("#label").textContent = node.querySelector("#label_edit").value;
+        node.classList.remove("edit");
+      }
+      else
+      {
+        node.querySelector("#label_edit").value = node.querySelector("#label").textContent;
+        node.classList.add("edit");
+      }
+    }*/
+  </script>
+  
+  <div class="menu-bar">
+    <button onclick="newVN()">New</button>
+    <button onclick="addSub()">New branch</button>
+    <button onclick="importVN()">Import</button>
+    <button onclick="exportVN()">Export</button>
+    Import/Export JSON: <input id="vnJSON"></input>
+    <button onclick="saveVN()">Save</button>
+    <button onclick="loadVN()">Load</button>
+    Name: <input id="vnName"></input>
+  </div>
+  
+  <div id="treeDisplay">
+    
+  </div>
+  
+  <script>
+    var last = localStorage.getItem("last_vn");
+    if (last != null)
+    {
+      $("#vnName").val(last);
+      loadVN();
+    }
+  </script>
+  
+</body>
+</html>

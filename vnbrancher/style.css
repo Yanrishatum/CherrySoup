@@ -1,0 +1,172 @@
+body
+{
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-bar
+{
+  padding: 4px;
+}
+
+/*
+
+.tree-node
+{
+  border: 1px dashed black;
+  padding: 2px;
+  width: 180px;
+}
+
+.node-fold
+{
+  display: inline-block;
+  background-color: gray;
+  width: 40px;
+  height: 100%;
+  margin-right: 4px;
+}
+
+.node-folded
+{
+  background-color: yellow;
+}
+
+.node-add
+{
+  margin-left: 8px;
+}
+
+.node-delete
+{
+  width: 10px;
+  margin-left: 2px;
+}
+*/
+#treeDisplay
+{
+  height: 100%;
+  position: relative;
+  flex-grow: 2;
+  overflow-x: scroll;
+}
+
+.background-canvas
+{
+  position: absolute;
+  z-index: -1;
+}
+
+.node
+{
+  border: 1px dashed black;
+  padding: 2px;
+  min-height: 26px;
+  min-width: 200px;
+  max-width: 200px;
+  
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  
+  display: flex;
+  transition: background-color 0.25s, border-color 0.25s;
+  
+  position: absolute;
+}
+
+.node.finished
+{
+  border-color: green;
+  background-color: #e9fde9;
+}
+
+.node.partial
+{
+  border-color: #ffbc00;
+  background-color: #fdfbe9;
+}
+
+.node #collapse
+{
+  display: inline-flex;
+  background-color: gray;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  align-items: center;
+  
+  transition: background-color 0.25s;
+}
+
+.node #collapse span
+{
+  width: 100%;
+  text-align: center;
+  padding: 4px;
+}
+
+.node.collapsed #collapse
+{
+  background-color: yellow;
+}
+
+.node.finished.collapsed #collapse
+{
+  background-color: #71ce71;
+}
+
+.node #label_checkbox
+{
+  display: flex;
+  align-items: center;
+}
+
+.node #checkbox
+{
+  vertical-align: middle;
+}
+
+.node #label_checkbox, .node #label_edit
+{
+  flex-grow: 2;
+}
+
+.node #label_edit
+{
+  width: 100%;
+}
+
+.node #label
+{
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.node.hidden, .node.edit #label, .node:not(.edit) #label_edit
+{
+  display: none;
+}
+
+.node button
+{
+  margin-left: 2px;
+  padding: 1px;
+}
+
+.node #delete
+{
+  width: 16px;
+}
+
+.node #add
+{
+  margin-left: 4px;
+}
+
+.node button, .node #collapse
+{
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+}
