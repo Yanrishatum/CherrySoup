@@ -1,0 +1,33 @@
+{
+  "manifest_version": 2,
+  "name": "Newstream",
+  "description": "Rss/Atom/other news aggreagtor.",
+  "version": "0.1",
+  "offline_enabled": false,
+  "incognito": "spanning",
+  "background": {
+    "scripts": [
+      "graph/vendor/d3.min.js",
+      "graph/vendor/alight.min.js",
+      "graph/vendor/d3-node-editor.min.js",
+      "graph/graphLogic.js",
+      "bg/parser.js", "bg/rss.js", "bg/main.js"],
+    "persistent": true
+  },
+  "options_ui": {
+    "page": "settings.html",
+    "chrome_style": true
+  },
+  "browser_action": {
+    "default_popup": "index.html"
+  },
+  "permissions": [
+    "bookmarks",
+    "alarms",
+    "storage",
+    "unlimitedStorage",
+    "*://*/*"
+  ],
+  // Give me synchronous sandbox messaging, and there will be no unsafe-eval. Deal?
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}

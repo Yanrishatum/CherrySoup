@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Newstream</title>
+  <style>
+    body
+    {
+      padding: 10px;
+      /* overflow-y: hidden; */
+    }
+    #status
+    {
+      opacity: 0;
+      transition: opacity 1s;
+    }
+    
+    div
+    {
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+    
+    #matcher_edit
+    {
+      overflow: hidden;
+      height: 0;
+      transition: height 0.5s;
+    }
+    
+    #matcher_edit div
+    {
+      display: flex;
+      flex-direction: row;
+    }
+    
+    #matcher_edit div label
+    {
+      flex-grow: 2;
+    }
+    
+    .section
+    {
+      border-bottom: 1px solid gray;
+    }
+    
+    .flex
+    {
+      display: flex;
+      flex-direction: row;
+    }
+    .flex.right
+    {
+      justify-content: flex-end;
+    }
+    .flex.left
+    {
+      justify-content: flex-start;
+    }
+    .flex.center
+    {
+      justify-content: center;
+    }
+    .flex.container
+    {
+      align-items: center;
+    }
+    
+    .button
+    {
+      display: inline-block;
+      user-select: none;
+      cursor: pointer;
+    }
+    
+    .button.icon
+    {
+      padding: 2px;
+      vertical-align: middle;
+    }
+    
+    .flex.container > *
+    {
+      margin-right: 2px;
+    }
+    
+  </style>
+</head>
+
+<body>
+  <div>
+    RSS bookmarks path:
+    <input id="common_path">
+    <button id="refresh">Refresh</button>
+  </div>
+  
+  <div>
+    
+  </div>
+  <div class="section">
+    <h3>Update rates (minutes)</h3>
+    <div><label>Default TTL: <input id="common_rate" type="number" min="5" max="120"></label></div>
+    <div>
+      <div>
+        <label>Custom tags: 
+          <select id="update_tags"></select>
+        </label>
+      </div>
+      <div class="flex container">
+        <label>Name: <input id="update_tag_name"></label>
+        <label>Rate: <input id="update_tag_rate" type="number" min="5" max="120"></label>
+        <div class="button icon" title="Save" id="update_tags_save"><img src="img/confirm.png"></div>
+        <div class="button icon" title="Delete" id="update_tags_delete"><img src="img/deny.png"></div>
+      </div>
+      
+    </div>
+  </div>
+  
+  
+  <div id="matchers">
+    <h3>Parser services</h3>
+    <div>Use <a href="/graph/editor.html" target="_blank">this node editor</a> to create parsers.</div>
+    <select id="matcher_list">
+      <option>None</option>
+    </select>
+    <div class="button icon" id="newMatcher"><img src="img/add.png"></div>
+    <div id="matcher_edit">
+      <div><label>Name: </label><input id="matcherName"></div>
+      <div><textarea id="matcherData"></textarea></div>
+      
+      <!-- <div><label>URL match (RegExp): </label><input id="matcherURL"></div>
+      <div><label>Items (selector): </label><input id="matcherItems"></div>
+      <div><label>Title parser (selector->text): </label><input id="matcherTitle"></div>
+      <div><label>Date parser (selector->text): </label><input id="matcherDate"></div>
+      <div><label>Link parser (selector->href): </label><input id="matcherLink"></div>
+      <div><label>Content parser (selector->html): </label><input id="matcherContent"></div> -->
+      <div class="flex right">
+        <div id="saveMatcher" title="Save" class="button icon"><img src="img/confirm.png"></div>
+        <div id="deleteMatcher" title="Delete" class="button icon"><img src="img/deny.png"></div>
+      </div>
+    </div>
+    
+  </div>
+  
+  <div id="status">-</div>
+  <button id="save">Save</button> <a href="index.html" target='_blank'>open app</a>
+
+  <script src="settings.js"></script>
+</body>
+</html>

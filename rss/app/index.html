@@ -1,0 +1,113 @@
+<html>
+  <head>
+    <script src="bind.js"></script>
+    <script src="chrome_api.js"></script>
+    <script src="bg/rss.js"></script>
+    <link rel="stylesheet" href="ui/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="ui/styles.css">
+    
+    <link rel="stylesheet" href="app.css">
+  </head>
+  <body>
+    
+    <template id="template_folder">
+      <div class="row folder" rv-id="id">
+        <div class="ui clickable grid" rv-class="getFolderStatus" rv-on-click="toggleDisplay">
+          <div class="ui left extend grow two">
+            <i class="folder fa fa-folder-open fa-16 fa-fw" rv-show="shouldShow"></i>
+            <i class="folder fa fa-folder fa-16 fa-fw" rv-hide="shouldShow"></i>
+            <span rv-text="title"></span><span rv-text="getCounts"></span>
+          </div>
+          <div>
+            <div class="ui icon only button" rv-on-click="reloadGroup,cancelEvent"><i class="fa fa-refresh"></i></div>
+            <div class="ui icon only button" rv-on-click="toggleSettings,cancelEvent"><i class="fa fa-wrench"></i></div>
+          </div>
+        </div>
+        <div class="feed-panel" rv-if="shouldShowSettings">
+          <label>Sort by: 
+            <select rv-value="setSortMethod">
+              <option value="">None</option>
+              <option value="sortByTotal">Most total</option>
+              <option value="sortByNew">Most new</option>
+            </select>
+          </label>
+          <label>Tag: 
+            <select rv-value="setTag" rv-options="getTagList">
+              <option value="TTL">TTL</option>
+            </select>
+          </label>
+        </div>
+        <div class="ui nested list" rv-provider="items,shouldShow">
+        </div>
+      </div>
+    </template>
+    
+    <template id="template_feed">
+      <div class="row feed" rv-id="id">
+        <div class="ui clickable grid" rv-on-click="toggleDisplay" rv-class="getFeedStatus">
+          <div class="ui left extend grow two grid">
+            <img class="ui right padded icon" rv-src="getFeedIcon,img/no_icon.png">
+            <i class="fa fa-exclamation-triangle fa-16 ui red text right padded icon" rv-if="error"></i>
+            <span rv-text="title"></span><span rv-text="getCounts"></span><span class="error" rv-if="error">  [<span rv-text="error"></span>]</span>
+          </div>
+          <div>
+            <div class="ui icon only button" rv-on-click="markSeen,cancelEvent"><i class="fa fa-eye-slash"></i></div>
+            <div class="ui icon only button" rv-on-click="markRead,cancelEvent"><i class="fa fa-book"></i></div>
+          </div>
+        </div>
+        <div class="ui raw nested menu list overscroll bottom divider" rv-show="shouldShow" rv-overscroll="10" rv-on="scroll,updateScrollMenu">
+          <div class="ui grid menu">
+            <div class="feed-panel">
+               <!-- <div class="button medium" rv-on-click="markSeen">Mark seen</div>  -->
+              <div class="ui icon button" rv-on-click="markRead"><i class="fa fa-eye-slash"></i>Mark read</div>
+              <div class="ui icon button" rv-on-click="reload"><i class="fa fa-refresh"></i>Reload</div>
+              <div class="ui icon button" rv-on-click="feedHome"><i class="fa fa-home"></i>Feed home</div>
+              <div class="ui icon button" rv-on-click="toggleSettings"><i class="fa fa-wrench"></i>Settings</div>
+            </div>
+            <div class="" rv-if="shouldShowSettings">
+              <label><input type="checkbox" rv-value="showDesc,true">Show descriptions</label>
+              <div class="ui icon button" rv-on-click="invalidateFeed"><i class="fa fa-circle-o-notch"></i>Invalidate</div>
+            </div>
+          </div>
+          <div class="content ui list" rv-provider="items,shouldShow">
+            <div class="feed-error" rv-show="error" rv-text="error"></div>
+            <div class="feed-error" rv-show="error" rv-text="parserType"></div>
+          </div>
+        </div>
+      </div>
+    </template>
+    
+    <template id="template_rss">
+      <div class="row rss">
+        <div class="ui grid" rv-class="getRSSStatus">
+          <div rv-on-click="showItem" rv-if="showContent,read" class="ui clickable link"><i class="fa fa-16 fa-eye fa-fw"></i></div>
+          <div rv-on-click="hideItem" rv-if="showContent,!read" class="ui clickable link"><i class="fa fa-16 fa-eye-slash fa-fw"></i></div>
+          <a class="ui grow two clickable" rv-on-click="open" rv-text="title"></a></div>
+        <div class="ui bottom divider image-preview" rv-if="!read,content,showContent" rv-html="getItemContent"></div> <!-- TOOD: rv-if -->
+      </div>
+    </template>
+    
+    <template id="template_custom_feed">
+      
+    </template>
+    
+    <div id="popup_container">
+      <div id="settings_panel" class="ui vertical grid">
+        <div class="content">
+          <div class="ui icon button popup-only" rv-on-click="openApp"><i class="fa fa-window-maximize"></i>Open App</div>
+          <div class="ui icon button" rv-on-click="openSettings"><i class="fa fa-cog"></i>Settings</div>
+          <div class="ui icon button" rv-on-click="reloadAll"><i class="fa fa-refresh"></i>Reload All</div>
+        </div>
+        <div class="dropdown">
+          <i class="fa fa-chevron-down fa-lg"></i>
+        </div>
+      </div>
+      
+      <div id="main_feed" rv-provider="items">
+      </div>
+      <div id="status"></div>
+    </div>
+    <script src="app.js">
+    </script>
+  </body>
+</html>

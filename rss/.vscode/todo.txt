@@ -1,0 +1,7 @@
+* Button-click
+* Sound on new items and setting about that
+* Automatic reordering of feed dependings on criteria
+* Support for custom feed parsers
+* Context-menu
+* Custom TTL for folders/feeds?
+* Custom templates

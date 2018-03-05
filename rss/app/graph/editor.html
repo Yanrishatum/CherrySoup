@@ -1,0 +1,70 @@
+<html>
+  <head>
+    
+    <script src="vendor/d3.min.js"></script>
+    <script src="vendor/alight.min.js"></script>
+    <script src="vendor/d3-node-editor.min.js"></script>
+    <!-- <link rel="stylesheet" href="vendor/d3-node-editor.css"> -->
+    <link rel="stylesheet" href="editor.css">
+    <link rel="stylesheet" href="vendor/ue4-node-style.css">
+    <script src="graphLogic.js"></script>
+  </head>
+  <body>
+    <template id="customNode">
+      <div class="title">{{node.title}}</div>
+      <content>
+        <column al-if="node.controls.length&gt;0 || node.inputs.length&gt;0">
+          <!-- Inputs-->
+          <div al-repeat="input in node.inputs" style="text-align: left">
+            <div class="socket input {{input.socket.id}} {{input.multipleConnections?'multiple':''}} {{input.connections.length&gt;0?'used':''}}" al-pick-input="al-pick-input" title="{{input.socket.name}}
+    {{input.socket.hint}}"></div>
+            <div class="input-title" al-if="!input.showControl()">{{input.title}}</div>
+            <div class="input-control" al-if="input.showControl()" al-control="input.control"></div>
+          </div>
+          <!-- Controls-->
+          <div class="control" al-repeat="control in node.controls" style="text-align: center" :width="control.parent.width - 2 * control.margin" :height="control.height" al-control="control"></div>
+        </column>
+        <column>
+          <!-- Outputs-->
+          <div al-repeat="output in node.outputs" style="text-align: right">
+            <div class="output-title">{{output.title}}</div>
+            <div class="socket output {{output.socket.id}} {{output.connections.length>0?'used':''}}" al-pick-output="al-pick-output" title="{{output.socket.name}}
+    {{output.socket.hint}}"></div>
+          </div>
+        </column>
+      </content>
+    </template>
+    <div class="control-panel">
+      <div class="panel-item graph-list">
+        <select id="graphSelect">
+          <option value="isCompatible">isCompatible: Parser and feed compatibility check</option>
+          <option value="getRoot">getRoot: Find root node for feed</option>
+          <option value="getFeedTitle">getFeedTitle: Get feed title to display</option>
+          <option value="getFeedURL">getFeedURL: Get feed home url</option>
+          <option value="getItems">getItems: Get list of feed items</option>
+          <option value="getInfo">getInfo: Process feed item to internal format</option>
+        </select>
+      </div>
+      
+      <div class="panel-item sample-url">
+        <label>
+          Sample URL:
+          <input id="sampleURL">
+        </label>
+        <button id="loadSampleURL">Load</button>
+      </div>
+      
+      <div class="panel-item">
+        <button id="validate">Validate</button>
+        <button id="export">Export</button>
+        <button id="import">Import</button>
+      </div>
+    </div>
+    <div id="nodeEditor" class="node-editor"></div>
+    <div id="exportPanel">
+      <textarea id="exportInput"></textarea>
+      <button id="exportButton">Confirm</button>
+    </div>
+    <script src="editor.js"></script>
+  </body>
+</html>
