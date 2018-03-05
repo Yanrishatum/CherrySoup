@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>Le Memes</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="main.js"></script>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <div id="memenu">
+      <input id="newMeme">
+      <button id="addMeme">Add</button>
+      <button id="showOptions">Options</button>
+      <a id="openPage" href="/index.html" target="_blank">As page</a>
+      <input id="copyMeme">
+    </div>
+    <div id="memeList" class="meme-list">
+      
+    </div>
+    <div id="imageList" class="meme-list">
+    </div>
+    <div class="options-container">
+      <div id="options">
+        <div>
+          <label><input id="bufferImagesCheckbox" type="checkbox">Store thumbnails for page loading speedup</label>
+        </div>
+        <div>
+          <button id="exportMemes">Export memes</button>
+          <button id="importMemes">Import memes</button>
+        </div>
+        <textarea id="exportImportText" placeholder="Memes. Raw. 100% pure. Unfiltered."></textarea>
+        <div style="flex-direction: column">
+          <div><kbd>Click</kbd> - copy meme to clipboard</div>
+          <div><kbd>Shift + Click</kbd> - list rearrange</div>
+          <div><kbd>Ctrl + Click</kbd> - delete meme</div>
+        </div>
+        <button id="closeButton">Close</button>
+      </div>
+    </div>
+  </body>
+</html>
